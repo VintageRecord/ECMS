@@ -16,6 +16,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/pages', require('./routes/pages'));
 app.use('/api/media', require('./routes/media'));
+app.use('/api/settings', require('./routes/settings'));
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 

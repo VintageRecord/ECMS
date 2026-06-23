@@ -5,6 +5,8 @@ import Dashboard from './pages/Dashboard';
 import Pages from './pages/Pages';
 import PageEditor from './pages/PageEditor';
 import Media from './pages/Media';
+import Settings from './pages/Settings';
+import PreviewPage from './pages/PreviewPage';
 import Layout from './components/Layout';
 
 const PrivateRoute = ({ children }) => {
@@ -16,12 +18,14 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/preview/:slug" element={<PreviewPage />} />
         <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
           <Route index element={<Dashboard />} />
           <Route path="pages" element={<Pages />} />
           <Route path="pages/new" element={<PageEditor />} />
           <Route path="pages/edit/:id" element={<PageEditor />} />
           <Route path="media" element={<Media />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
     </BrowserRouter>

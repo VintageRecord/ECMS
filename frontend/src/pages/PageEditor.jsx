@@ -142,7 +142,7 @@ export default function PageEditor() {
     }
   }, [id]);
 
-  const save = async () => {
+  const save = async (opts = {}) => {
     if (!form.title || !form.slug) return setMsg('Title and slug are required');
     setSaving(true);
     setMsg('');
@@ -150,13 +150,19 @@ export default function PageEditor() {
       const content = JSON.stringify(gjsRef.current.getProjectData());
       const css = gjsRef.current.getCss();
       const payload = { ...form, content, css };
+      let savedId = id;
       if (id) {
         await api.put(`/pages/${id}`, payload);
       } else {
-        await api.post('/pages', payload);
+        const res = await api.post('/pages', payload);
+        savedId = res.data.id;
       }
       setMsg('Saved successfully!');
-      setTimeout(() => navigate('/pages'), 1000);
+      if (opts.preview) {
+        window.open(`/preview/${form.slug}`, '_blank');
+      } else {
+        setTimeout(() => navigate('/pages'), 1000);
+      }
     } catch (err) {
       setMsg(err.response?.data?.error || 'Failed to save');
     }
@@ -189,10 +195,15 @@ export default function PageEditor() {
           <option value="draft">Draft</option>
           <option value="published">Published</option>
         </select>
-        <button onClick={save} disabled={saving} className="btn btn-primary" style={{ marginLeft: 'auto' }}>
-          {saving ? 'Saving...' : 'Save Page'}
-        </button>
-        {msg && <span style={{ fontSize: 13, color: msg.includes('success') ? '#22c55e' : '#ef4444' }}>{msg}</span>}
+        <div style={{ display: 'flex', gap: 8, marginLeft: 'auto', alignItems: 'center' }}>
+          {msg && <span style={{ fontSize: 13, color: msg.includes('success') ? '#22c55e' : '#ef4444' }}>{msg}</span>}
+          <button onClick={() => save({ preview: true })} disabled={saving} className="btn btn-secondary">
+            Save & Preview
+          </button>
+          <button onClick={() => save()} disabled={saving} className="btn btn-primary">
+            {saving ? 'Saving...' : 'Save Page'}
+          </button>
+        </div>
       </div>
       <div id="gjs" style={{ flex: 1 }} />
     </div>

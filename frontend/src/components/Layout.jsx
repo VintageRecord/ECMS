@@ -23,6 +23,7 @@ export default function Layout() {
             { to: '/', label: 'Dashboard', icon: '⊞' },
             { to: '/pages', label: 'Pages', icon: '📄' },
             { to: '/media', label: 'Media', icon: '🖼' },
+            { to: '/settings', label: 'Nav & Footer', icon: '⚙' },
           ].map(({ to, label, icon }) => (
             <NavLink key={to} to={to} end={to === '/'} style={({ isActive }) => ({
               display: 'flex', alignItems: 'center', gap: 10,
