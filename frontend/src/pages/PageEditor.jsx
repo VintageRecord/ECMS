@@ -173,35 +173,51 @@ export default function PageEditor() {
   const autoSlug = (title) => title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', margin: -24 }}>
-      <div style={{ padding: '12px 20px', background: 'white', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
-        <button onClick={() => navigate('/pages')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: '#6b7280' }}>←</button>
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', margin: -32 }}>
+      {/* Toolbar */}
+      <div style={{
+        padding: '0 20px', background: 'var(--sidebar-bg)', borderBottom: '1px solid rgba(255,255,255,0.06)',
+        display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0, height: 60,
+      }}>
+        <button onClick={() => navigate('/pages')} style={{ background: 'rgba(255,255,255,0.06)', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: '7px 10px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 500, fontFamily: 'inherit' }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+          Pages
+        </button>
+
+        <div style={{ width: 1, height: 24, background: 'rgba(255,255,255,0.1)' }} />
+
         <input
           placeholder="Page Title"
           value={form.title}
           onChange={e => setForm({ ...form, title: e.target.value, slug: id ? form.slug : autoSlug(e.target.value) })}
-          style={{ width: 200, padding: '6px 10px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 14 }}
+          style={{ width: 220, padding: '7px 12px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, fontSize: 13, color: 'white', fontFamily: 'inherit' }}
         />
-        <input
-          placeholder="slug"
-          value={form.slug}
-          onChange={e => setForm({ ...form, slug: e.target.value })}
-          style={{ width: 160, padding: '6px 10px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 14 }}
-        />
+
+        <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '7px 10px', gap: 4 }}>
+          <span style={{ color: '#64748b', fontSize: 12 }}>/</span>
+          <input
+            placeholder="slug"
+            value={form.slug}
+            onChange={e => setForm({ ...form, slug: e.target.value })}
+            style={{ width: 140, padding: 0, background: 'transparent', border: 'none', fontSize: 13, color: '#94a3b8', fontFamily: 'inherit', boxShadow: 'none' }}
+          />
+        </div>
+
         <select
           value={form.status}
           onChange={e => setForm({ ...form, status: e.target.value })}
-          style={{ padding: '6px 10px', border: '1px solid #d1d5db', borderRadius: 6, fontSize: 14, width: 120 }}
+          style={{ padding: '7px 10px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, fontSize: 13, width: 130, color: form.status === 'published' ? '#34d399' : '#fbbf24', fontFamily: 'inherit', cursor: 'pointer' }}
         >
           <option value="draft">Draft</option>
           <option value="published">Published</option>
         </select>
         <div style={{ display: 'flex', gap: 8, marginLeft: 'auto', alignItems: 'center' }}>
-          {msg && <span style={{ fontSize: 13, color: msg.includes('success') ? '#22c55e' : '#ef4444' }}>{msg}</span>}
-          <button onClick={() => save({ preview: true })} disabled={saving} className="btn btn-secondary">
-            Save & Preview
+          {msg && <span style={{ fontSize: 13, color: msg.includes('success') ? '#34d399' : '#f87171', fontWeight: 500 }}>{msg}</span>}
+          <button onClick={() => save({ preview: true })} disabled={saving} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', padding: '7px 14px', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600, fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            Preview
           </button>
-          <button onClick={() => save()} disabled={saving} className="btn btn-primary">
+          <button onClick={() => save()} disabled={saving} style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', border: 'none', color: 'white', padding: '7px 18px', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 700, fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 6 }}>
             {saving ? 'Saving...' : 'Save Page'}
           </button>
         </div>

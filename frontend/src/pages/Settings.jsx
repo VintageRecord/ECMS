@@ -68,27 +68,24 @@ export default function Settings() {
   const addColLink = (ci) => setFooterCols(footerCols.map((c, i) => i === ci ? { ...c, links: [...c.links, { label: '', url: '' }] } : c));
   const removeColLink = (ci, li) => setFooterCols(footerCols.map((c, i) => i === ci ? { ...c, links: c.links.filter((_, j) => j !== li) } : c));
 
-  const tabStyle = (t) => ({
-    padding: '8px 20px', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 14,
-    borderBottom: tab === t ? '3px solid #4f46e5' : '3px solid transparent',
-    background: 'none', color: tab === t ? '#4f46e5' : '#6b7280'
-  });
-
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700 }}>Site Settings</h1>
+      <div className="page-header">
+        <div>
+          <h1 className="page-title">Site Settings</h1>
+          <p className="page-subtitle">Manage your navigation menu and footer</p>
+        </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          {msg && <span style={{ fontSize: 13, color: msg.includes('success') ? '#22c55e' : '#ef4444' }}>{msg}</span>}
+          {msg && <span style={{ fontSize: 13, color: msg.includes('success') ? 'var(--success)' : 'var(--danger)', fontWeight: 500 }}>{msg}</span>}
           <button className="btn btn-primary" onClick={save} disabled={saving}>{saving ? 'Saving...' : 'Save Changes'}</button>
         </div>
       </div>
 
       {/* Tabs */}
-      <div style={{ borderBottom: '1px solid #e5e7eb', marginBottom: 24, display: 'flex' }}>
-        <button style={tabStyle('nav')} onClick={() => setTab('nav')}>Navigation Menu</button>
-        <button style={tabStyle('footer')} onClick={() => setTab('footer')}>Footer</button>
-        <button style={tabStyle('preview')} onClick={() => setTab('preview')}>Preview</button>
+      <div className="tabs">
+        <button className={`tab${tab === 'nav' ? ' active' : ''}`} onClick={() => setTab('nav')}>Navigation Menu</button>
+        <button className={`tab${tab === 'footer' ? ' active' : ''}`} onClick={() => setTab('footer')}>Footer</button>
+        <button className={`tab${tab === 'preview' ? ' active' : ''}`} onClick={() => setTab('preview')}>Live Preview</button>
       </div>
 
       {/* NAV TAB */}
