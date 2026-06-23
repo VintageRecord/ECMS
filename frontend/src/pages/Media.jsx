@@ -79,7 +79,12 @@ export default function Media() {
           cursor: 'pointer', transition: 'all 0.2s',
         }}
       >
-        <div style={{ fontSize: 28, marginBottom: 8 }}>{uploading ? '⏳' : '📤'}</div>
+        <div style={{ fontSize: 28, marginBottom: 8, color: 'var(--text-muted)' }}>
+          {uploading
+            ? <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            : <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          }
+        </div>
         <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>
           {uploading ? 'Uploading...' : 'Drop image here or click to upload'}
         </p>
@@ -89,7 +94,7 @@ export default function Media() {
       {/* Grid */}
       {filtered.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-state-icon">🖼️</div>
+          <div className="empty-state-icon" style={{ color: 'var(--text-muted)' }}><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
           <h3>{search ? 'No files match your search' : 'No media uploaded yet'}</h3>
           <p>{search ? 'Try a different search term' : 'Upload your first image to get started'}</p>
         </div>
@@ -152,10 +157,10 @@ export default function Media() {
             </div>
             <div style={{ display: 'flex', gap: 8 }}>
               <button onClick={() => { navigator.clipboard.writeText(window.location.origin + selected.url); alert('URL copied to clipboard!'); }} className="btn btn-secondary" style={{ flex: 1, justifyContent: 'center' }}>
-                📋 Copy URL
+                Copy URL
               </button>
               <button onClick={() => deleteMedia(selected.id)} className="btn btn-danger" style={{ flex: 1, justifyContent: 'center' }}>
-                🗑 Delete
+                Delete
               </button>
             </div>
           </div>

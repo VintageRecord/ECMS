@@ -123,7 +123,7 @@ export default function Settings() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {navLinks.map((link, i) => (
                 <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                  <span style={{ color: '#9ca3af', fontSize: 16, cursor: 'grab' }}>⠿</span>
+                  <span style={{ color: '#9ca3af', cursor: 'grab', display: 'flex' }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg></span>
                   <input placeholder="Label (e.g. Home)" value={link.label} onChange={e => updateNavLink(i, 'label', e.target.value)} style={{ flex: 1 }} />
                   <input placeholder="URL (e.g. /home)" value={link.url} onChange={e => updateNavLink(i, 'url', e.target.value)} style={{ flex: 1 }} />
                   <button onClick={() => removeNavLink(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444', fontSize: 18 }}>×</button>

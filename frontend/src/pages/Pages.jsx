@@ -62,7 +62,7 @@ export default function Pages() {
       <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
         {filtered.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-state-icon">📄</div>
+            <div className="empty-state-icon" style={{ color: 'var(--text-muted)' }}><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
             <h3>{search || filter !== 'all' ? 'No pages match your search' : 'No pages yet'}</h3>
             <p>{search || filter !== 'all' ? 'Try a different search or filter' : 'Create your first page to get started'}</p>
             {!search && filter === 'all' && <Link to="/pages/new" className="btn btn-primary">Create Your First Page</Link>}
