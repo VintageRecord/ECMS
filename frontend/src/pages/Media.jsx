@@ -17,7 +17,7 @@ export default function Media() {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      await api.post('/media/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      await api.post('/media/upload', formData);
       load();
     } catch (err) {
       alert(err.response?.data?.error || 'Upload failed');

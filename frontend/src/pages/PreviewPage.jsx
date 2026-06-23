@@ -34,14 +34,7 @@ export default function PreviewPage() {
   const navLinks = JSON.parse(settings.nav_links || '[]');
   const footerCols = JSON.parse(settings.footer_columns || '[]');
 
-  let html = '';
-  try {
-    const projectData = JSON.parse(page.content);
-    html = projectData?.pages?.[0]?.frames?.[0]?.component?.components?.map?.(c => c.content || '').join('') || '';
-    if (!html && projectData?.html) html = projectData.html;
-  } catch {
-    html = page.content;
-  }
+  const html = page.html || '';
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>

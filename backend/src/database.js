@@ -17,6 +17,7 @@ db.exec(`
     title TEXT NOT NULL,
     slug TEXT UNIQUE NOT NULL,
     content TEXT DEFAULT '{}',
+    html TEXT DEFAULT '',
     css TEXT DEFAULT '',
     status TEXT DEFAULT 'draft',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

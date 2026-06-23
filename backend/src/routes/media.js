@@ -1,12 +1,16 @@
 const router = require('express').Router();
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const db = require('../database');
 const auth = require('../middleware/auth');
 
+const uploadDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+
 const storage = multer.diskStorage({
-  destination: path.join(__dirname, '../uploads'),
+  destination: uploadDir,
   filename: (req, file, cb) => {
     const unique = uuidv4() + path.extname(file.originalname);
     cb(null, unique);
@@ -17,7 +21,7 @@ const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    const allowed = /jpeg|jpg|png|gif|webp|svg/;
+    const allowed = /^image\/(jpeg|jpg|png|gif|webp|svg\+xml)$/;
     cb(null, allowed.test(file.mimetype));
   }
 });

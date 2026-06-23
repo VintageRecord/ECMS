@@ -27,9 +27,10 @@ router.get('/:id', auth, (req, res) => {
 router.post('/', auth, (req, res) => {
   const { title, slug, content, css, status } = req.body;
   if (!title || !slug) return res.status(400).json({ error: 'Title and slug required' });
+  const { html } = req.body;
   try {
     const id = uuidv4();
-    db.prepare('INSERT INTO pages (id, title, slug, content, css, status) VALUES (?, ?, ?, ?, ?, ?)').run(id, title, slug, content || '{}', css || '', status || 'draft');
+    db.prepare('INSERT INTO pages (id, title, slug, content, html, css, status) VALUES (?, ?, ?, ?, ?, ?, ?)').run(id, title, slug, content || '{}', html || '', css || '', status || 'draft');
     res.json({ id, message: 'Page created' });
   } catch {
     res.status(400).json({ error: 'Slug already exists' });
@@ -38,9 +39,11 @@ router.post('/', auth, (req, res) => {
 
 // Update page
 router.put('/:id', auth, (req, res) => {
-  const { title, slug, content, css, status } = req.body;
+  const existing = db.prepare('SELECT id FROM pages WHERE id = ?').get(req.params.id);
+  if (!existing) return res.status(404).json({ error: 'Page not found' });
+  const { title, slug, content, html, css, status } = req.body;
   try {
-    db.prepare('UPDATE pages SET title=?, slug=?, content=?, css=?, status=?, updated_at=CURRENT_TIMESTAMP WHERE id=?').run(title, slug, content, css, status, req.params.id);
+    db.prepare('UPDATE pages SET title=?, slug=?, content=?, html=?, css=?, status=?, updated_at=CURRENT_TIMESTAMP WHERE id=?').run(title, slug, content, html || '', css, status, req.params.id);
     res.json({ message: 'Page updated' });
   } catch {
     res.status(400).json({ error: 'Slug already exists' });

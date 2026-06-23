@@ -148,8 +148,9 @@ export default function PageEditor() {
     setMsg('');
     try {
       const content = JSON.stringify(gjsRef.current.getProjectData());
+      const html = gjsRef.current.getHtml();
       const css = gjsRef.current.getCss();
-      const payload = { ...form, content, css };
+      const payload = { ...form, content, html, css };
       let savedId = id;
       if (id) {
         await api.put(`/pages/${id}`, payload);
