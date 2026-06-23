@@ -1,4 +1,8 @@
 require('dotenv').config();
+
+// Fallback defaults if .env is not loaded correctly
+if (!process.env.JWT_SECRET) process.env.JWT_SECRET = 'ecms_default_secret_please_change_in_production';
+if (!process.env.PORT) process.env.PORT = '5000';
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
