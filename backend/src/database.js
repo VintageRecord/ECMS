@@ -42,8 +42,10 @@ db.exec(`
   );
 `);
 
-// Migrate existing pages table to add SEO columns if they don't exist
+// Migrate existing pages table to add columns if they don't exist
 const pageColumns = db.prepare('PRAGMA table_info(pages)').all().map(c => c.name);
+if (!pageColumns.includes('html')) db.exec("ALTER TABLE pages ADD COLUMN html TEXT DEFAULT ''");
+if (!pageColumns.includes('css')) db.exec("ALTER TABLE pages ADD COLUMN css TEXT DEFAULT ''");
 if (!pageColumns.includes('meta_title')) db.exec("ALTER TABLE pages ADD COLUMN meta_title TEXT DEFAULT ''");
 if (!pageColumns.includes('meta_description')) db.exec("ALTER TABLE pages ADD COLUMN meta_description TEXT DEFAULT ''");
 
