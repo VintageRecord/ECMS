@@ -40,6 +40,7 @@ router.post('/upload', auth, upload.single('file'), (req, res) => {
 });
 
 router.delete('/:id', auth, (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Only admins can delete media' });
   const media = db.prepare('SELECT * FROM media WHERE id = ?').get(req.params.id);
   if (!media) return res.status(404).json({ error: 'Not found' });
   const fs = require('fs');

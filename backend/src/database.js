@@ -19,6 +19,8 @@ db.exec(`
     content TEXT DEFAULT '{}',
     html TEXT DEFAULT '',
     css TEXT DEFAULT '',
+    meta_title TEXT DEFAULT '',
+    meta_description TEXT DEFAULT '',
     status TEXT DEFAULT 'draft',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -39,5 +41,10 @@ db.exec(`
     value TEXT NOT NULL
   );
 `);
+
+// Migrate existing pages table to add SEO columns if they don't exist
+const pageColumns = db.prepare('PRAGMA table_info(pages)').all().map(c => c.name);
+if (!pageColumns.includes('meta_title')) db.exec("ALTER TABLE pages ADD COLUMN meta_title TEXT DEFAULT ''");
+if (!pageColumns.includes('meta_description')) db.exec("ALTER TABLE pages ADD COLUMN meta_description TEXT DEFAULT ''");
 
 module.exports = db;

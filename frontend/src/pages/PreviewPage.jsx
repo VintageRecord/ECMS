@@ -245,6 +245,10 @@ export default function PreviewPage() {
         </div>
       </nav>
 
+      {/* SEO meta tags */}
+      {page.meta_title && <title>{page.meta_title}</title>}
+      {page.meta_description && <meta name="description" content={page.meta_description} />}
+
       {/* Page Content — switches between view and edit */}
       <main style={{ flex: 1, position: 'relative' }}>
         {editMode ? (
