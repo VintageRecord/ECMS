@@ -12,7 +12,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.4",
     "axios": "^1.18.1",
+    "bootstrap": "^5.1.0",
+    "bootstrap-icons": "^1.4.1",
     "grapesjs": "^0.23.2",
     "grapesjs-preset-webpage": "^1.0.3",
     "react": "^19.2.7",
