@@ -148,9 +148,11 @@ export default function PageEditor() {
   const [msg, setMsg] = useState('');
   const [showTemplate, setShowTemplate] = useState(!id);
   const [showSEO, setShowSEO] = useState(false);
+  const [showTypography, setShowTypography] = useState(false);
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [globalTypo, setGlobalTypo] = useState({ fontSize: 16, fontFamily: 'default', lineHeight: 1.6 });
 
   useEffect(() => {
     if (showTemplate) return;
@@ -237,8 +239,6 @@ export default function PageEditor() {
       }
     });
 
-    gjsRef.current = editor;
-
     // Track undo/redo state
     const updateUndoRedo = () => {
       setCanUndo(editor.UndoManager.hasUndo());
@@ -246,6 +246,9 @@ export default function PageEditor() {
     };
     editor.on('component:add component:remove component:update', updateUndoRedo);
     editor.on('undo redo', updateUndoRedo);
+
+    // Expose editor to global typography controls
+    gjsRef.current = editor;
 
     // Load media as assets
     api.get('/media').then(r => {
@@ -274,8 +277,24 @@ export default function PageEditor() {
       if (selectedTemplate.css) editor.setStyle(selectedTemplate.css);
     }
 
-    return () => editor.destroy();
+    gjsRef.current = editor;
+    return () => { gjsRef.current = null; editor.destroy(); };
   }, [showTemplate]);
+
+  const applyGlobalTypography = (typo) => {
+    const editor = gjsRef.current;
+    if (!editor) return;
+    const doc = editor.Canvas.getDocument();
+    if (!doc) return;
+    let el = doc.getElementById('__global-typo__');
+    if (!el) { el = doc.createElement('style'); el.id = '__global-typo__'; doc.head.appendChild(el); }
+    const ff = typo.fontFamily === 'default' ? 'inherit' : typo.fontFamily;
+    el.textContent = `body, body * { font-size: ${typo.fontSize}px !important; font-family: ${ff} !important; line-height: ${typo.lineHeight} !important; }`;
+  };
+
+  useEffect(() => {
+    applyGlobalTypography(globalTypo);
+  }, [globalTypo]);
 
   const save = async (opts = {}) => {
     if (!form.title || !form.slug) return setMsg('Title and slug are required');
@@ -284,7 +303,9 @@ export default function PageEditor() {
     try {
       const content = JSON.stringify(gjsRef.current.getProjectData());
       const html = gjsRef.current.getHtml();
-      const css = gjsRef.current.getCss();
+      const ff = globalTypo.fontFamily === 'default' ? 'inherit' : globalTypo.fontFamily;
+      const typoCSS = `body { font-size: ${globalTypo.fontSize}px; font-family: ${ff}; line-height: ${globalTypo.lineHeight}; }\n`;
+      const css = typoCSS + gjsRef.current.getCss();
       const payload = { ...form, content, html, css };
       if (id) {
         await api.put(`/pages/${id}`, payload);
@@ -407,6 +428,16 @@ export default function PageEditor() {
           SEO
         </button>
 
+        {/* Typography button */}
+        <button
+          title="Global Typography"
+          onClick={() => setShowTypography(!showTypography)}
+          style={{ ...btnStyle(false), color: showTypography ? '#a5b4fc' : '#94a3b8', borderColor: showTypography ? '#6366f1' : 'rgba(255,255,255,0.12)', gap: 6, fontSize: 12, fontWeight: 600 }}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          Typography
+        </button>
+
         <div style={{ display: 'flex', gap: 8, marginLeft: 'auto', alignItems: 'center' }}>
           {msg && <span style={{ fontSize: 12, color: msg === 'Saved!' ? '#34d399' : '#f87171', fontWeight: 600 }}>{msg}</span>}
           {form.slug && (
@@ -454,6 +485,61 @@ export default function PageEditor() {
               <div style={{ color: '#475569', fontSize: 10, marginTop: 3 }}>{(form.meta_description || '').length}/160 characters</div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Global Typography panel */}
+      {showTypography && (
+        <div style={{ background: '#1e293b', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '14px 20px', display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
+          <span style={{ color: '#94a3b8', fontSize: 12, fontWeight: 600, whiteSpace: 'nowrap' }}>GLOBAL TYPOGRAPHY</span>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <label style={{ color: '#64748b', fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap' }}>Font Size</label>
+            <input
+              type="range" min="10" max="28" step="1"
+              value={globalTypo.fontSize}
+              onChange={e => setGlobalTypo(t => ({ ...t, fontSize: Number(e.target.value) }))}
+              style={{ width: 120, accentColor: '#6366f1' }}
+            />
+            <span style={{ color: 'white', fontSize: 12, fontWeight: 700, minWidth: 32 }}>{globalTypo.fontSize}px</span>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <label style={{ color: '#64748b', fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap' }}>Font Family</label>
+            <select
+              value={globalTypo.fontFamily}
+              onChange={e => setGlobalTypo(t => ({ ...t, fontFamily: e.target.value }))}
+              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 7, color: 'white', padding: '5px 8px', fontSize: 12, fontFamily: 'inherit' }}
+            >
+              <option value="default">Page Default</option>
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="'Times New Roman', serif">Times New Roman</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="'Courier New', monospace">Courier New</option>
+              <option value="'Roboto', sans-serif">Roboto</option>
+              <option value="'Open Sans', sans-serif">Open Sans</option>
+            </select>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <label style={{ color: '#64748b', fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap' }}>Line Height</label>
+            <input
+              type="range" min="1" max="2.5" step="0.1"
+              value={globalTypo.lineHeight}
+              onChange={e => setGlobalTypo(t => ({ ...t, lineHeight: Number(e.target.value) }))}
+              style={{ width: 100, accentColor: '#6366f1' }}
+            />
+            <span style={{ color: 'white', fontSize: 12, fontWeight: 700, minWidth: 28 }}>{globalTypo.lineHeight}</span>
+          </div>
+
+          <button
+            onClick={() => setGlobalTypo({ fontSize: 16, fontFamily: 'default', lineHeight: 1.6 })}
+            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8', padding: '5px 12px', borderRadius: 7, cursor: 'pointer', fontSize: 11, fontFamily: 'inherit' }}
+          >
+            Reset
+          </button>
+          <span style={{ color: '#475569', fontSize: 11 }}>These apply to the whole page preview only — save to persist.</span>
         </div>
       )}
 
