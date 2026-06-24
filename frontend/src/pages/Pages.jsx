@@ -92,6 +92,10 @@ export default function Pages() {
                   <td style={{ color: 'var(--text-muted)' }}>{new Date(page.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</td>
                   <td>
                     <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
+                      <a href={`/preview/${page.slug}`} target="_blank" rel="noreferrer" className="btn btn-secondary btn-sm">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        Preview
+                      </a>
                       <Link to={`/pages/edit/${page.id}`} className="btn btn-secondary btn-sm">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                         Edit

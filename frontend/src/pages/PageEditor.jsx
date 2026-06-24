@@ -409,10 +409,17 @@ export default function PageEditor() {
 
         <div style={{ display: 'flex', gap: 8, marginLeft: 'auto', alignItems: 'center' }}>
           {msg && <span style={{ fontSize: 12, color: msg === 'Saved!' ? '#34d399' : '#f87171', fontWeight: 600 }}>{msg}</span>}
-          <button onClick={() => save({ preview: true })} disabled={saving} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', padding: '7px 14px', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600, fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            Preview
-          </button>
+          {form.slug && (
+            <a
+              href={`/preview/${form.slug}`}
+              target="_blank"
+              rel="noreferrer"
+              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', padding: '7px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600, fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none' }}
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Preview
+            </a>
+          )}
           <button onClick={() => save()} disabled={saving} style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', border: 'none', color: 'white', padding: '7px 18px', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 700, fontFamily: 'inherit' }}>
             {saving ? 'Saving...' : 'Save Page'}
           </button>
