@@ -46,6 +46,8 @@ const navLinks = JSON.stringify([
   { label: 'About', url: '/preview/about' },
   { label: 'Services', url: '/preview/service' },
   { label: 'Causes', url: '/preview/causes' },
+  { label: 'Events', url: '/preview/events' },
+  { label: 'Blog', url: '/preview/blog' },
   { label: 'Contact', url: '/preview/contact' },
 ]);
 
@@ -56,14 +58,16 @@ const footerColumns = JSON.stringify([
       { label: 'About Us', url: '/preview/about' },
       { label: 'Our Services', url: '/preview/service' },
       { label: 'Our Causes', url: '/preview/causes' },
+      { label: 'Events', url: '/preview/events' },
     ]
   },
   {
     heading: 'Get Involved',
     links: [
-      { label: 'Volunteer', url: '#' },
-      { label: 'Donate Now', url: '#' },
-      { label: 'Contact Us', url: '/preview/contact' },
+      { label: 'Volunteer', url: '/preview/volunteer' },
+      { label: 'Donate Now', url: '/preview/donation' },
+      { label: 'Gallery', url: '/preview/gallery' },
+      { label: 'Blog', url: '/preview/blog' },
     ]
   },
   {
@@ -72,6 +76,7 @@ const footerColumns = JSON.stringify([
       { label: 'Example@gmail.com', url: '#' },
       { label: '+01234567890', url: '#' },
       { label: '123 Green St, Nature City', url: '#' },
+      { label: 'Contact Us', url: '/preview/contact' },
     ]
   },
 ]);
@@ -145,11 +150,12 @@ function extractContent(filename) {
     'service.html': '/preview/service',
     'causes.html': '/preview/causes',
     'contact.html': '/preview/contact',
-    'events.html': '/preview/home',
-    'blog.html': '/preview/home',
-    'gallery.html': '/preview/home',
-    'volunteer.html': '/preview/home',
-    'donation.html': '/preview/home',
+    'events.html': '/preview/events',
+    'blog.html': '/preview/blog',
+    'gallery.html': '/preview/gallery',
+    'volunteer.html': '/preview/volunteer',
+    'donation.html': '/preview/donation',
+    '404.html': '/preview/not-found',
   };
   for (const [orig, repl] of Object.entries(linkMap)) {
     html = html.replace(new RegExp(`href="${orig}"`, 'g'), `href="${repl}"`);
@@ -189,11 +195,53 @@ const pages = [
     filename: 'causes.html',
   },
   {
+    title: 'Events',
+    slug: 'events',
+    meta_title: 'Events — Environs Conservation',
+    meta_description: 'Join Environs at our upcoming conservation events, workshops and community initiatives around the world.',
+    filename: 'events.html',
+  },
+  {
+    title: 'Blog',
+    slug: 'blog',
+    meta_title: 'Blog — Environs Conservation',
+    meta_description: 'Read the latest news, stories and insights from the Environs team on environmental conservation.',
+    filename: 'blog.html',
+  },
+  {
+    title: 'Gallery',
+    slug: 'gallery',
+    meta_title: 'Gallery — Environs Conservation',
+    meta_description: 'Explore our gallery of images from conservation projects, wildlife and natural environments around the world.',
+    filename: 'gallery.html',
+  },
+  {
+    title: 'Volunteer',
+    slug: 'volunteer',
+    meta_title: 'Volunteer — Join the Environs Team',
+    meta_description: 'Make a difference by volunteering with Environs on conservation projects in your community and around the world.',
+    filename: 'volunteer.html',
+  },
+  {
+    title: 'Donation',
+    slug: 'donation',
+    meta_title: 'Donate — Support Environs Conservation',
+    meta_description: 'Support Environs with a donation to help protect forests, wildlife and natural ecosystems for future generations.',
+    filename: 'donation.html',
+  },
+  {
     title: 'Contact',
     slug: 'contact',
     meta_title: 'Contact Environs — Get in Touch',
     meta_description: 'Contact the Environs team to learn more about our work, volunteer, donate or partner with us.',
     filename: 'contact.html',
+  },
+  {
+    title: '404 Not Found',
+    slug: 'not-found',
+    meta_title: '404 — Page Not Found | Environs',
+    meta_description: 'The page you are looking for could not be found.',
+    filename: '404.html',
   },
 ];
 
