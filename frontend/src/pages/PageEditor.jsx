@@ -257,11 +257,17 @@ export default function PageEditor() {
       api.get(`/pages/${id}`).then(({ data }) => {
         setForm({ title: data.title, slug: data.slug, status: data.status, meta_title: data.meta_title || '', meta_description: data.meta_description || '' });
         try {
-          editor.loadProjectData(JSON.parse(data.content));
+          const projectData = JSON.parse(data.content);
+          if (projectData && (projectData.pages || projectData.components)) {
+            editor.loadProjectData(projectData);
+          } else {
+            editor.setComponents(data.html || '');
+            if (data.css) editor.setStyle(data.css);
+          }
         } catch {
           editor.setComponents(data.html || '');
+          if (data.css) editor.setStyle(data.css);
         }
-        if (data.css) editor.setStyle(data.css);
       }).catch(() => {});
     } else if (selectedTemplate) {
       editor.setComponents(selectedTemplate.html);

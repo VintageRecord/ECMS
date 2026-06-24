@@ -115,11 +115,16 @@ export default function PreviewPage() {
     // Load existing content
     try {
       const projectData = JSON.parse(page.content);
-      editor.loadProjectData(projectData);
+      if (projectData && (projectData.pages || projectData.components)) {
+        editor.loadProjectData(projectData);
+      } else {
+        editor.setComponents(page.html || '');
+        if (page.css) editor.setStyle(page.css);
+      }
     } catch {
       editor.setComponents(page.html || '');
+      if (page.css) editor.setStyle(page.css);
     }
-    if (page.css) editor.setStyle(page.css);
 
     // Load media as assets
     api.get('/media').then(r => {
