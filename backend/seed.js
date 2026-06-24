@@ -91,14 +91,11 @@ upsert.run('footer_text_color', '#F3E0C6');
 upsert.run('footer_columns', footerColumns);
 console.log('✓ Navigation & footer settings saved');
 
-// ─── SHARED ASSETS (CDN links + CSS) ──────────────────────
-const CDN_LINKS = `<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600&family=Roboto&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"><\/script>`;
+// ─── SHARED ASSETS (local vendor files — no CDN dependency) ──────────────────────
+const CDN_LINKS = `<link href="/uploads/vendor/fontawesome/all.min.css" rel="stylesheet">
+<link href="/uploads/vendor/bootstrap.min.css" rel="stylesheet">
+<link href="/uploads/vendor/bootstrap-icons.css" rel="stylesheet">
+<script src="/uploads/vendor/bootstrap.bundle.min.js"><\/script>`;
 
 // Read the template CSS and patch image paths + Bootstrap colour overrides
 let templateCSS = '';
