@@ -16,6 +16,13 @@ router.get('/view/:slug', (req, res) => {
   res.json(page);
 });
 
+// Serve page as standalone HTML (bypasses React entirely)
+router.get('/raw/:slug', (req, res) => {
+  const page = db.prepare('SELECT * FROM pages WHERE slug = ? AND status = ?').get(req.params.slug, 'published');
+  if (!page) return res.status(404).send('<h1>Page not found</h1>');
+  res.send(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${page.meta_title || page.title}</title><style>${page.css || ''}</style></head><body style="margin:0;padding:0;">${page.html || ''}</body></html>`);
+});
+
 // Get single page by id (for editor)
 router.get('/:id', auth, (req, res) => {
   const page = db.prepare('SELECT * FROM pages WHERE id = ?').get(req.params.id);

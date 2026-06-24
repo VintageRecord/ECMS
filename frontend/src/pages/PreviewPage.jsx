@@ -8,17 +8,22 @@ function PageFrame({ html, css }) {
   const iframeRef = useRef(null);
   const [height, setHeight] = useState(600);
 
+  // Extract <link> and <script> tags from html so they go in <head>
+  const headTags = [];
+  const bodyHtml = html.replace(/<link\s[^>]*>/gi, (m) => { headTags.push(m); return ''; })
+                       .replace(/<script\s[^>]*><\/script>/gi, (m) => { headTags.push(m); return ''; });
+
   const srcDoc = `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+${headTags.join('\n')}
 <style>${css}</style>
 </head>
 <body style="margin:0;padding:0;">
-${html}
+${bodyHtml}
 <script>
-  // Tell parent iframe the full scroll height so we can resize
   function sendHeight() {
     window.parent.postMessage({ type: 'iframeHeight', height: document.body.scrollHeight }, '*');
   }
