@@ -1,8 +1,52 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import grapesjs from 'grapesjs';
 import 'grapesjs/dist/css/grapes.min.css';
 import api from '../api';
+
+function PageFrame({ html, css }) {
+  const iframeRef = useRef(null);
+  const [height, setHeight] = useState(600);
+
+  const srcDoc = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>${css}</style>
+</head>
+<body style="margin:0;padding:0;">
+${html}
+<script>
+  // Tell parent iframe the full scroll height so we can resize
+  function sendHeight() {
+    window.parent.postMessage({ type: 'iframeHeight', height: document.body.scrollHeight }, '*');
+  }
+  window.addEventListener('load', sendHeight);
+  new MutationObserver(sendHeight).observe(document.body, { childList: true, subtree: true });
+<\/script>
+</body>
+</html>`;
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.data && e.data.type === 'iframeHeight') {
+        setHeight(e.data.height + 32);
+      }
+    };
+    window.addEventListener('message', handler);
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  return (
+    <iframe
+      ref={iframeRef}
+      srcDoc={srcDoc}
+      style={{ width: '100%', height: height, border: 'none', display: 'block' }}
+      title="Page content"
+    />
+  );
+}
 
 export default function PreviewPage() {
   const { slug } = useParams();
@@ -346,10 +390,7 @@ export default function PreviewPage() {
         {editMode ? (
           <div id="live-editor" style={{ minHeight: '60vh' }} />
         ) : (
-          <>
-            <style>{page.css}</style>
-            <div dangerouslySetInnerHTML={{ __html: page.html || '' }} />
-          </>
+          <PageFrame html={page.html || ''} css={page.css || ''} />
         )}
       </main>
 
